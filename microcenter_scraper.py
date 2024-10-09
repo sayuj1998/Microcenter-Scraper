@@ -3,11 +3,11 @@ import requests, re
 class Microcenter:
     def __init__(self):
         """URL to search"""
-        self.base_url = "https://www.microcenter.com/search/search_results.aspx?N=&cat=&Ntt="
+        self.base_url = "https://www.microcenter.com/search/search_results.aspx?N=&cat=&storeid=181&Ntt="
 
-    def search(self, package: str):
+    def search(self, query: str):
         """Search for product based on the package"""
-        url = f"{self.base_url}{package}"
+        url = f"{self.base_url}{query}"
         response = requests.get(url)
         if response.status_code == 200:
             html = response.text
@@ -17,7 +17,7 @@ class Microcenter:
 
     def parse_html(self, html: str):
         """Parse and extract information from the HTML"""
-        pattern = re.compile(r'<div class="h2">.*?<a\s+[^>]*?data-name="([^"]*?)"\s+[^>]*?data-price="([^"]*?)"\s+[^>]*?data-position="([^"]*?)"\s+href="([^"]*?)".*?>',
+        pattern = re.compile(r'data-name="([^"]*?)"\s+[^>]*?data-price="([^"]*?)"\s+[^>]*?data-position="([^"]*?)"\s+href="([^"]*?)".*?>',
             re.DOTALL)
 
         matches = re.findall(pattern, html)
@@ -33,4 +33,4 @@ class Microcenter:
 
 if __name__ == '__main__':
     microcenter = Microcenter()
-    microcenter.search("graphics card")
+    microcenter.search("1 tb ssd")
